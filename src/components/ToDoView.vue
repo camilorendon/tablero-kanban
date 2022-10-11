@@ -35,8 +35,22 @@ const boards = reactive([
 ]);
 
 
-function handleNewItem(text){
-    console.log(text.value)
+function handleNewItem(text, board){
+    board.items.push({
+        id:crypto.randomUUID(),
+        title: text.value 
+    })
+}
+
+function handleNewBoard(){
+    const name = prompt('Name of the board')
+    if(!! name){
+        boards.push({
+            id: crypto.randomUUID(),
+            name : name,
+            items: [],
+        });
+    }
 }
 
 </script>
@@ -45,7 +59,7 @@ function handleNewItem(text){
     <nav>
         <ul>
             <li>
-                <a href="#">create board</a>
+                <a href="#" @click.prevent="handleNewBoard">create board</a>
             </li>
         </ul>
     </nav>
@@ -53,7 +67,7 @@ function handleNewItem(text){
         <div class="boards">
             <div class="board" v-for="board in boards" :key="board.id">
                 <div> {{board.name}} </div>
-                <InputNew @on-new-item="handleNewItem"/>
+                <InputNew @on-new-item="(text) => handleNewItem(text, board)"/>
                 <div class="items">
                     <div class="item" v-for="item in board.items" :key="item.id"> {{item.title}} </div>
                 </div>
